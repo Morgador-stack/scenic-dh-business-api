@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./scenic_business.db"
 
     # 上游服务
-    RAG_SERVICE_URL: str = "http://localhost:8003/api/v1"
+    RAG_SERVICE_URL: str = "http://127.0.0.1:5010"
     AVATAR_ORCHESTRATOR_URL: str = "http://localhost:8004/v1"
 
     # 内部服务 token
