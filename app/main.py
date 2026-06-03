@@ -80,7 +80,7 @@ def health():
 # ═══════════════════════════════════════════
 # Routers（逐步挂载）
 # ═══════════════════════════════════════════
-from app.routers import spots, routes, sessions, messages, arrivals, feedback, scenic  # noqa: E402
+from app.routers import spots, routes, sessions, messages, arrivals, feedback, scenic, rag_proxy  # noqa: E402
 
 app.include_router(spots.router, prefix="/v1")
 app.include_router(routes.router, prefix="/v1")
@@ -89,3 +89,4 @@ app.include_router(messages.router, prefix="/v1")
 app.include_router(arrivals.router, prefix="/v1")
 app.include_router(feedback.router, prefix="/v1")
 app.include_router(scenic.router, prefix="/v1")
+app.include_router(rag_proxy.router, prefix="/v1")
