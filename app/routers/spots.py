@@ -58,9 +58,9 @@ def list_spots(
     total_pages = (total + limit - 1) // limit
 
     return ok(
-        data={"items": paginated, "total": total},
-        trace_id=trace_id,
-        pagination=Pagination(page=page, limit=limit, total=total, totalPages=total_pages),
+        paginated,
+        trace_id,
+        pagination=Pagination(page=page, page_size=limit, total=total, total_pages=total_pages),
     )
 
 
@@ -69,8 +69,8 @@ def get_spot(spot_id: str, request: Request):
     trace_id = request.state.trace_id
     for s in _SEED_SPOTS:
         if s["id"] == spot_id:
-            return ok(data=s, trace_id=trace_id)
-    return err("SPOT_NOT_FOUND", "NOT_FOUND", f"景点 {spot_id} 不存在", trace_id)
+            return ok(s, trace_id)
+    return err(40401, f"景点 {spot_id} 不存在", trace_id)
 
 
 @router.get("/spots/{spot_id}/guide")
@@ -78,5 +78,5 @@ def get_spot_guide(spot_id: str, style: str = Query(None), duration: str = Query
     trace_id = request.state.trace_id
     guide = _SEED_GUIDES.get(spot_id)
     if not guide:
-        return err("SPOT_NOT_FOUND", "NOT_FOUND", f"景点 {spot_id} 的讲解词不存在", trace_id)
-    return ok(data={**guide, "spotId": spot_id, "source": "public_demo_package"}, trace_id=trace_id)
+        return err(40401, f"景点 {spot_id} 的讲解词不存在", trace_id)
+    return ok({**guide, "spotId": spot_id, "source": "public_demo_package"}, trace_id)

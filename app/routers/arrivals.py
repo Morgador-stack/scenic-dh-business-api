@@ -34,11 +34,11 @@ def create_arrival(session_id: str, body: ArrivalEventRequest, request: Request)
         "createdAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     _ARRIVALS.setdefault(session_id, []).append(event)
-    return ok(data={"eventId": event_id, "accepted": True}, trace_id=trace_id)
+    return ok({"eventId": event_id, "accepted": True}, trace_id)
 
 
 @router.get("/sessions/{session_id}/arrival-events")
 def list_arrivals(session_id: str, request: Request):
     trace_id = request.state.trace_id
     events = _ARRIVALS.get(session_id, [])
-    return ok(data={"events": events}, trace_id=trace_id)
+    return ok({"events": events}, trace_id)

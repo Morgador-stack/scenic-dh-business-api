@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     AVATAR_ORCHESTRATOR_URL: str = "http://localhost:8004/v1"
 
     # 内部服务 token
-    INTERNAL_SERVICE_TOKEN: str = "svc-dev-token"
+    SERVICE_TOKEN: str = "svc-dev-token"
 
     # 日志
     LOG_LEVEL: str = "INFO"

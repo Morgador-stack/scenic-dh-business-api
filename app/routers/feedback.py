@@ -34,7 +34,7 @@ def create_feedback(session_id: str, body: FeedbackRequest, request: Request):
         "createdAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     _FEEDBACKS.append(fb)
-    return ok(data={"feedbackId": feedback_id}, trace_id=trace_id)
+    return ok({"feedbackId": feedback_id}, trace_id)
 
 
 @router.get("/feedback")
@@ -43,4 +43,4 @@ def list_feedback(date_range: str = Query(None), rating: int = Query(None), requ
     items = _FEEDBACKS
     if rating:
         items = [f for f in items if f["rating"] == rating]
-    return ok(data={"items": items, "total": len(items)}, trace_id=trace_id)
+    return ok({"items": items, "total": len(items)}, trace_id)

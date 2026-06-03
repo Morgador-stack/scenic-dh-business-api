@@ -11,7 +11,7 @@ def test_health():
     resp = client.get("/health")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["success"] is True
+    assert data["code"] == 0
     assert data["data"]["status"] == "ok"
     assert data["data"]["version"] == "1.0.0"
 
@@ -20,7 +20,7 @@ def test_spots_list():
     resp = client.get("/v1/spots")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["success"] is True
+    assert data["code"] == 0
     assert len(data["data"]["items"]) > 0
     assert data["data"]["items"][0]["id"].startswith("LS-")
 
@@ -36,8 +36,8 @@ def test_spots_not_found():
     resp = client.get("/v1/spots/LS-999")
     assert resp.status_code == 200
     data = resp.json()
-    assert data["success"] is False
-    assert data["code"] == "SPOT_NOT_FOUND"
+    assert data["code"] != 0
+    assert data["code"] == 40401
 
 
 def test_spot_guide():
@@ -59,7 +59,7 @@ def test_create_session():
     resp = client.post("/v1/sessions", json={"source": "test", "language": "zh"})
     assert resp.status_code == 200
     data = resp.json()
-    assert data["success"] is True
+    assert data["code"] == 0
     assert "sessionId" in data["data"]
 
 

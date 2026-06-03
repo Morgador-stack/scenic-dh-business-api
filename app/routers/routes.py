@@ -76,7 +76,7 @@ def list_routes(duration: str = Query(None), persona: str = Query(None), interes
         routes = [r for r in routes if duration in r["duration"]]
     if persona:
         routes = [r for r in routes if persona in r["persona"]]
-    return ok(data={"items": routes}, trace_id=trace_id)
+    return ok({"items": routes}, trace_id)
 
 
 @router.get("/routes/{route_id}")
@@ -84,8 +84,8 @@ def get_route(route_id: str, request: Request):
     trace_id = request.state.trace_id
     for r in _SEED_ROUTES:
         if r["id"] == route_id:
-            return ok(data=r, trace_id=trace_id)
-    return err("ROUTE_NOT_FOUND", "NOT_FOUND", f"路线 {route_id} 不存在", trace_id)
+            return ok(r, trace_id)
+    return err(40402, f"路线 {route_id} 不存在", trace_id)
 
 
 @router.post("/routes/plan")
@@ -97,4 +97,4 @@ def plan_route(body: RoutePlanRequest, request: Request):
         route = _SEED_ROUTES[2]
     elif body.duration and "5" in body.duration:
         route = _SEED_ROUTES[1]
-    return ok(data={"route": route, "reason": "根据您的偏好推荐的路线"}, trace_id=trace_id)
+    return ok({"route": route, "reason": "根据您的偏好推荐的路线"}, trace_id)

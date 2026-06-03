@@ -28,7 +28,7 @@ class TestFullTouristJourney:
     def test_01_health(self):
         resp = client.get("/health")
         assert resp.status_code == 200
-        assert resp.json()["success"]
+        assert resp.json()["code"] == 0
 
     def test_02_scenic_area_info(self):
         resp = client.get("/v1/scenic-areas/SA-001")
@@ -115,7 +115,7 @@ class TestFullTouristJourney:
             "fallback": False,
         })
         data = resp.json()
-        assert data["success"]
+        assert data["code"] == 0
 
     def test_14_list_messages(self):
         self.test_09_create_session()
@@ -151,7 +151,7 @@ class TestFullTouristJourney:
 
         # Get spots
         spots = client.get("/v1/spots")
-        assert spots.json()["data"]["total"] >= 16
+        assert spots.json()["data"]["pagination"]["total"] >= 16
 
         # Get spot detail
         spot = client.get("/v1/spots/LS-001")
@@ -159,7 +159,7 @@ class TestFullTouristJourney:
 
         # Get guide
         guide = client.get("/v1/spots/LS-001/guide")
-        assert guide.json()["success"]
+        assert guide.json()["code"] == 0
 
         # Get routes
         routes = client.get("/v1/routes")
@@ -202,7 +202,7 @@ class TestAdminSmoke:
         for ep in endpoints:
             resp = client.get(ep)
             assert resp.status_code == 200, f"{ep} failed"
-            assert resp.json()["success"], f"{ep} returned error"
+            assert resp.json()["code"] == 0, f"{ep} returned error"
 
 
 class TestSourceMarking:

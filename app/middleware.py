@@ -47,16 +47,15 @@ class TraceMiddleware(BaseHTTPMiddleware):
 async def internal_auth_middleware(request: Request, call_next):
     """内部服务间鉴权校验"""
     if request.url.path.startswith("/internal/"):
-        token = request.headers.get("x-service-token")
-        if token != settings.INTERNAL_SERVICE_TOKEN:
+        auth_header = request.headers.get("Authorization", "")
+        if not auth_header.startswith("Bearer ") or auth_header[7:] != settings.SERVICE_TOKEN:
             return JSONResponse(
                 status_code=403,
                 content={
-                    "success": False,
-                    "code": "FORBIDDEN",
-                    "error": {"type": "AUTH", "message": "内部服务 token 无效", "detail": None},
-                    "traceId": getattr(request.state, "trace_id", "unknown"),
-                    "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    "code": 40100,
+                    "message": "内部服务 token 无效",
+                    "data": None,
+                    "trace_id": getattr(request.state, "trace_id", "unknown"),
                 },
             )
     return await call_next(request)

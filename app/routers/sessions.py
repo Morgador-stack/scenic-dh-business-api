@@ -42,7 +42,7 @@ def create_session(body: CreateSessionRequest, request: Request):
         "updatedAt": now,
     }
     _SESSIONS[session_id] = session
-    return ok(data={"sessionId": session_id, "status": "active"}, trace_id=trace_id)
+    return ok({"sessionId": session_id, "status": "active"}, trace_id)
 
 
 @router.get("/sessions/{session_id}")
@@ -50,8 +50,8 @@ def get_session(session_id: str, request: Request):
     trace_id = request.state.trace_id
     session = _SESSIONS.get(session_id)
     if not session:
-        return err("SESSION_NOT_FOUND", "NOT_FOUND", f"会话 {session_id} 不存在", trace_id)
-    return ok(data=session, trace_id=trace_id)
+        return err(40403, f"会话 {session_id} 不存在", trace_id)
+    return ok(session, trace_id)
 
 
 @router.patch("/sessions/{session_id}")
@@ -59,7 +59,7 @@ def patch_session(session_id: str, body: PatchSessionRequest, request: Request):
     trace_id = request.state.trace_id
     session = _SESSIONS.get(session_id)
     if not session:
-        return err("SESSION_NOT_FOUND", "NOT_FOUND", f"会话 {session_id} 不存在", trace_id)
+        return err(40403, f"会话 {session_id} 不存在", trace_id)
     if body.currentSpotId is not None:
         session["currentSpotId"] = body.currentSpotId
     if body.currentRouteId is not None:
@@ -68,4 +68,4 @@ def patch_session(session_id: str, body: PatchSessionRequest, request: Request):
         session["profile"] = body.profile
     session["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     _SESSIONS[session_id] = session
-    return ok(data=session, trace_id=trace_id)
+    return ok(session, trace_id)

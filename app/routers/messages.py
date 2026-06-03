@@ -42,11 +42,11 @@ def create_message(session_id: str, body: CreateMessageRequest, request: Request
         "createdAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     _MESSAGES.setdefault(session_id, []).append(msg)
-    return ok(data={"messageId": message_id}, trace_id=trace_id)
+    return ok({"messageId": message_id}, trace_id)
 
 
 @router.get("/sessions/{session_id}/messages")
 def list_messages(session_id: str, limit: int = 50, request: Request = None):
     trace_id = request.state.trace_id
     messages = _MESSAGES.get(session_id, [])
-    return ok(data={"messages": messages[-limit:]}, trace_id=trace_id)
+    return ok({"messages": messages[-limit:]}, trace_id)

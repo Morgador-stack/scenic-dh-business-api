@@ -65,7 +65,7 @@ def health():
     trace_id = "startup-check"
 
     return ok(
-        data={
+        {
             "status": "ok",
             "version": settings.SERVICE_VERSION,
             "dependencies": {
@@ -73,7 +73,7 @@ def health():
                 "avatar_orchestrator": settings.AVATAR_ORCHESTRATOR_URL,
             },
         },
-        trace_id=trace_id,
+        trace_id,
     )
 
 
