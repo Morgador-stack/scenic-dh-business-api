@@ -16,7 +16,7 @@ class TraceMiddleware(BaseHTTPMiddleware):
     """为每个请求注入 trace_id，从上游继承或新建"""
 
     async def dispatch(self, request: Request, call_next):
-        trace_id = request.headers.get("x-trace-id", str(uuid.uuid4()))
+        trace_id = request.headers.get("x-trace-id", f"trace_{uuid.uuid4().hex}")
         span_id = str(uuid.uuid4())[:8]
 
         request.state.trace_id = trace_id
@@ -45,12 +45,16 @@ class TraceMiddleware(BaseHTTPMiddleware):
 
 
 async def internal_auth_middleware(request: Request, call_next):
-    """内部服务间鉴权校验"""
+    """内部服务间鉴权校验（白名单模式：仅保护 /internal/ 路径）"""
+    # 公开路径无需鉴权
+    if request.url.path in ("/health", "/docs", "/redoc", "/openapi.json"):
+        return await call_next(request)
+
     if request.url.path.startswith("/internal/"):
         auth_header = request.headers.get("Authorization", "")
-        if not auth_header.startswith("Bearer ") or auth_header[7:] != settings.SERVICE_TOKEN:
+        if not auth_header.startswith("Bearer ") or auth_header[7:] != settings.INTERNAL_SERVICE_TOKEN:
             return JSONResponse(
-                status_code=403,
+                status_code=401,
                 content={
                     "code": 40100,
                     "message": "内部服务 token 无效",
