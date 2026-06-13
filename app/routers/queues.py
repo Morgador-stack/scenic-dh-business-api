@@ -90,3 +90,32 @@ def create_reservation(body: CreateReservationRequest, request: Request):
     }
     _RESERVATIONS[reservation_id] = reservation
     return ok(reservation, trace_id)
+
+
+@router.post("/queue/tickets/{ticket_id}/cancel")
+def cancel_queue_ticket(ticket_id: str, request: Request):
+    trace_id = request.state.trace_id
+    ticket = _QUEUE_TICKETS.get(ticket_id)
+    if not ticket:
+        return err(40404, f"排队号 {ticket_id} 不存在", trace_id)
+    if ticket["status"] not in ("waiting",):
+        return err(40001, f"当前状态 {ticket['status']} 不可取消", trace_id)
+    ticket["status"] = "cancelled"
+    ticket["cancelledAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    resource = next((r for r in _RESOURCES if r["id"] == ticket["resourceId"]), None)
+    if resource:
+        resource["currentQueue"] = max(0, resource.get("currentQueue", 1) - 1)
+    return ok(ticket, trace_id)
+
+
+@router.post("/reservations/{reservation_id}/cancel")
+def cancel_reservation(reservation_id: str, request: Request):
+    trace_id = request.state.trace_id
+    res = _RESERVATIONS.get(reservation_id)
+    if not res:
+        return err(40404, f"预约 {reservation_id} 不存在", trace_id)
+    if res["status"] not in ("confirmed",):
+        return err(40001, f"当前状态 {res['status']} 不可取消", trace_id)
+    res["status"] = "cancelled"
+    res["cancelledAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return ok(res, trace_id)

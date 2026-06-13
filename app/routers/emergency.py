@@ -36,10 +36,10 @@ _OFFLINE_PACKAGES = [
 ]
 
 _EMERGENCY_CONTACTS = [
-    {"type": "sos", "name": "景区应急指挥中心", "phone": "023-88880110", "availableHours": "全天"},
-    {"type": "medical", "name": "景区医务室", "phone": "023-88880120", "availableHours": "08:00-20:00"},
-    {"type": "security", "name": "景区安保部", "phone": "023-88880119", "availableHours": "全天"},
-    {"type": "service", "name": "游客服务中心", "phone": "023-88880001", "availableHours": "08:00-18:00"},
+    {"type": "sos", "name": "景区应急指挥中心", "phone": "0510-88880110", "availableHours": "全天"},
+    {"type": "medical", "name": "景区医务室", "phone": "0510-88880120", "availableHours": "08:00-20:00"},
+    {"type": "security", "name": "景区安保部", "phone": "0510-88880119", "availableHours": "全天"},
+    {"type": "service", "name": "游客服务中心", "phone": "0510-88880001", "availableHours": "08:00-18:00"},
 ]
 
 
