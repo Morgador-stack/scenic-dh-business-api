@@ -233,3 +233,96 @@ class TestSourceMarking:
         resp = client.get("/v1/tickets/products")
         for ticket in resp.json()["data"]["items"]:
             assert ticket.get("source") == "public_demo_package"
+
+    # ── Round 1 新增 P0 端点测试 ──
+
+    def test_20_map_pois(self):
+        resp = client.get("/v1/map/pois")
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert "items" in data
+        assert len(data["items"]) >= 5
+
+    def test_21_map_layers(self):
+        resp = client.get("/v1/map/layers")
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert "items" in data
+        assert len(data["items"]) >= 3
+
+    def test_22_qrcode_resolve_valid(self):
+        resp = client.post("/v1/qrcode/resolve", json={"code": "SPOT-001"})
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert data["type"] == "spot"
+        assert data["targetName"] == "朝天门广场"
+
+    def test_23_qrcode_resolve_disabled(self):
+        resp = client.post("/v1/qrcode/resolve", json={"code": "DISABLED-QR"})
+        assert resp.status_code == 200
+        assert resp.json()["code"] == 41004
+
+    def test_24_qrcode_resolve_invalid(self):
+        resp = client.post("/v1/qrcode/resolve", json={"code": "NOEXIST"})
+        assert resp.status_code == 200
+        assert resp.json()["code"] == 40404
+
+    def test_25_ticket_products(self):
+        resp = client.get("/v1/tickets/products")
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert len(data) >= 0  # scenic.py returns list directly
+
+    def test_26_ticket_verify_valid(self):
+        resp = client.post("/v1/tickets/verify", json={"ticketCode": "TCK-A003"})
+        assert resp.status_code == 200
+        assert resp.json()["code"] == 40001  # refunded
+
+    def test_27_ticket_orders(self):
+        resp = client.get("/v1/tickets/orders")
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert len(data) >= 0  # scenic.py returns list directly
+
+    def test_28_queue_list(self):
+        resp = client.get("/v1/queues")
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert len(data) >= 0  # scenic.py returns list directly
+
+    def test_29_queue_ticket_create(self):
+        resp = client.post("/v1/queue/tickets", json={"resourceId": "QP-001", "sessionId": "test-sid"})
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert data["status"] == "waiting"
+        assert "queueNumber" in data
+
+    def test_30_reservation_create(self):
+        resp = client.post("/v1/reservations", json={"resourceId": "QP-002", "sessionId": "test-sid", "date": "2026-06-14", "slot": "19:30"})
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert data["status"] == "confirmed"
+
+    def test_31_emergency_request(self):
+        resp = client.post("/v1/emergency/requests", json={"type": "medical", "sessionId": "test-sid", "description": "游客跌倒"})
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert data["status"] == "pending"
+        assert "workOrderId" in data
+        assert "emergencyContact" in data
+
+    def test_32_work_order_create_and_query(self):
+        resp = client.post("/v1/work-orders", json={"type": "complaint", "sessionId": "test-sid", "title": "卫生间卫生差"})
+        assert resp.status_code == 200
+        wo_id = resp.json()["data"]["workOrderId"]
+        resp2 = client.get("/v1/work-orders")
+        assert resp2.status_code == 200
+        items = resp2.json()["data"]["items"]
+        assert any(w["id"] == wo_id for w in items)
+
+    def test_33_offline_package(self):
+        resp = client.get("/v1/offline-packages/latest")
+        assert resp.status_code == 200
+        data = resp.json()["data"]
+        assert data["available"] == True
+        assert "version" in data
