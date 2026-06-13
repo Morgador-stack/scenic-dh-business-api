@@ -326,3 +326,13 @@ class TestSourceMarking:
         data = resp.json()["data"]
         assert data["available"] == True
         assert "version" in data
+
+    def test_34_queue_negative_party_size(self):
+        """partySize 必须 >= 1"""
+        resp = client.post("/v1/queue/tickets", json={"resourceId": "QP-001", "sessionId": "test", "partySize": 0})
+        assert resp.status_code == 422  # Pydantic validation error
+
+    def test_35_queue_excessive_party_size(self):
+        """partySize 必须 <= 20"""
+        resp = client.post("/v1/queue/tickets", json={"resourceId": "QP-001", "sessionId": "test", "partySize": 21})
+        assert resp.status_code == 422

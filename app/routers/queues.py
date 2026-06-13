@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Request
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.schemas.common import ok, err
 
@@ -25,7 +25,7 @@ class CreateQueueTicketRequest(BaseModel):
     resourceId: str
     sessionId: str
     phone: str | None = None
-    partySize: int = 1
+    partySize: int = Field(default=1, ge=1, le=20)
 
 
 class CreateReservationRequest(BaseModel):
@@ -33,7 +33,7 @@ class CreateReservationRequest(BaseModel):
     sessionId: str
     date: str
     slot: str
-    partySize: int = 1
+    partySize: int = Field(default=1, ge=1, le=20)
     phone: str | None = None
 
 
