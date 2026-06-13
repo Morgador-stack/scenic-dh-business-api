@@ -37,14 +37,6 @@ class CreateReservationRequest(BaseModel):
     phone: str | None = None
 
 
-@router.get("/queues")
-def _list_queues_disabled(request: Request, scenic_id: str = "SA-001", type: str | None = None):
-    trace_id = request.state.trace_id
-    resources = _RESOURCES
-    if type:
-        resources = [r for r in resources if r["type"] == type]
-    return ok({"items": resources, "total": len(resources)}, trace_id)
-
 
 @router.post("/queue/tickets")
 def create_queue_ticket(body: CreateQueueTicketRequest, request: Request):

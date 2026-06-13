@@ -88,18 +88,6 @@ def get_queues(spot_id: str = None, request: Request = None):
     )
 
 
-@router.get("/tickets/products")
-def get_tickets(date: str = None, request: Request = None):
-    trace_id = request.state.trace_id
-    return ok(
-        {
-            "items": [
-                {"id": "TK-001", "name": "灵山胜境成人票", "price": 210, "status": "available", "source": "public_demo_package"},
-                {"id": "TK-002", "name": "灵山胜境学生票", "price": 105, "status": "available", "source": "public_demo_package"},
-            ]
-        },
-        trace_id,
-    )
 
 
 @router.get("/analytics/visitor-behavior")

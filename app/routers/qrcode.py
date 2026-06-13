@@ -33,8 +33,8 @@ def resolve_qrcode(body: ResolveQrCodeRequest, request: Request):
     if qr["status"] == "disabled":
         return err(41004, f"该二维码已停用: {qr['targetName']}", trace_id)
 
-    from datetime import datetime
-    now = datetime.utcnow().strftime("%Y-%m-%d")
+    from datetime import datetime, timezone
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     if now < qr["validFrom"] or now > qr["validTo"]:
         return err(41005, f"该二维码不在有效期内 ({qr['validFrom']}~{qr['validTo']})", trace_id)
 
