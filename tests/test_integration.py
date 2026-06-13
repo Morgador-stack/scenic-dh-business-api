@@ -255,7 +255,7 @@ class TestSourceMarking:
         assert resp.status_code == 200
         data = resp.json()["data"]
         assert data["type"] == "spot"
-        assert data["targetName"] == "朝天门广场"
+        assert data["targetName"] == "灵山大佛"
 
     def test_23_qrcode_resolve_disabled(self):
         resp = client.post("/v1/qrcode/resolve", json={"code": "DISABLED-QR"})
