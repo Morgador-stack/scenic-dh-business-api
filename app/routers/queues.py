@@ -15,9 +15,9 @@ _QUEUE_TICKETS: dict[str, dict] = {}
 _RESERVATIONS: dict[str, dict] = {}
 
 _RESOURCES: list[dict] = [
-    {"id": "QP-001", "name": "洪崖洞观景台", "type": "spot", "capacity": 50, "currentWait": 20, "currentQueue": 15, "status": "open"},
+    {"id": "QP-001", "name": "灵山梵宫", "type": "spot", "capacity": 50, "currentWait": 20, "currentQueue": 15, "status": "open"},
     {"id": "QP-002", "name": "夜景灯光秀", "type": "event", "capacity": 200, "currentWait": 10, "currentQueue": 8, "status": "open"},
-    {"id": "QP-003", "name": "朝天门广场演出", "type": "event", "capacity": 100, "currentWait": 0, "currentQueue": 0, "status": "paused"},
+    {"id": "QP-003", "name": "九龙灌浴表演", "type": "event", "capacity": 100, "currentWait": 0, "currentQueue": 0, "status": "paused"},
 ]
 
 

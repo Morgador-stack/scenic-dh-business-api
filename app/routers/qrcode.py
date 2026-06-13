@@ -9,8 +9,8 @@ router = APIRouter(tags=["QR Code"])
 
 # ── 码数据 ──
 _QR_CODES: dict[str, dict] = {
-    "SPOT-001": {"code": "SPOT-001", "type": "spot", "targetId": "POI-002", "targetName": "朝天门广场", "action": "guide", "url": "/spots/POI-002/guide", "validFrom": "2026-01-01", "validTo": "2026-12-31", "status": "active"},
-    "SPOT-002": {"code": "SPOT-002", "type": "spot", "targetId": "POI-003", "targetName": "洪崖洞观景台", "action": "guide", "url": "/spots/POI-003/guide", "validFrom": "2026-01-01", "validTo": "2026-12-31", "status": "active"},
+    "SPOT-001": {"code": "SPOT-001", "type": "spot", "targetId": "POI-002", "targetName": "灵山大佛", "action": "guide", "url": "/spots/POI-002/guide", "validFrom": "2026-01-01", "validTo": "2026-12-31", "status": "active"},
+    "SPOT-002": {"code": "SPOT-002", "type": "spot", "targetId": "POI-003", "targetName": "灵山梵宫", "action": "guide", "url": "/spots/POI-003/guide", "validFrom": "2026-01-01", "validTo": "2026-12-31", "status": "active"},
     "TICKET-001": {"code": "TICKET-001", "type": "ticket", "targetId": "ORD-001", "targetName": "成人票 #A001", "action": "verify", "url": "/tickets/verify", "validFrom": "2026-06-01", "validTo": "2026-06-30", "status": "active"},
     "EVENT-001": {"code": "EVENT-001", "type": "event", "targetId": "EVT-001", "targetName": "夜景灯光秀", "action": "info", "url": "/events/EVT-001", "validFrom": "2026-06-01", "validTo": "2026-06-30", "status": "active"},
     "DEVICE-001": {"code": "DEVICE-001", "type": "device", "targetId": "DEV-001", "targetName": "自助取票机A", "action": "service", "url": "/services/DEV-001", "validFrom": "2026-01-01", "validTo": "2026-12-31", "status": "active"},
