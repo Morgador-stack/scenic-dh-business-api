@@ -55,26 +55,20 @@ app.middleware("http")(internal_auth_middleware)
 # ═══════════════════════════════════════════
 # Health
 # ═══════════════════════════════════════════
+
 @app.get("/health", tags=["Health"])
 def health():
     from app.schemas.common import ok
-    from fastapi import Request
-    import inspect
-
-    # 尝试获取 request context；在非请求上下文中回退
     trace_id = "startup-check"
-
-    return ok(
-        {
-            "status": "ok",
-            "version": settings.SERVICE_VERSION,
-            "dependencies": {
-                "rag_service": settings.RAG_SERVICE_URL,
-                "avatar_orchestrator": settings.AVATAR_ORCHESTRATOR_URL,
-            },
+    return ok({
+        "status": "ok",
+        "version": settings.SERVICE_VERSION,
+        "dependencies": {
+            "rag_service": settings.RAG_SERVICE_URL,
+            "avatar_orchestrator": settings.AVATAR_ORCHESTRATOR_URL,
         },
-        trace_id,
-    )
+        "liveness": True,
+    }, trace_id)
 
 
 # ═══════════════════════════════════════════
